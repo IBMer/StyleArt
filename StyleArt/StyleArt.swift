@@ -27,12 +27,12 @@ class StyleArt{
     //MARK:- Properties
     var models:[MLModel]=[]
     //CoremL model instance
-    var museModel: FNS_La_Muse_1!
-    var candy:FNS_Candy_1!
-    var Feathers:FNS_Feathers_1!
-    var udanieModel:FNS_Udnie_1!
-    var mosaic:FNS_Mosaic_1!
-    var screamModel:FNS_The_Scream_1!
+    var museModel: FNS_La_Muse!
+    var candy:FNS_Candy!
+    var Feathers:FNS_Feathers!
+    var udanieModel:FNS_Udnie!
+    var mosaic:FNS_Mosaic!
+    var screamModel:FNS_The_Scream!
     //Height constant for image processing
     let imageSize = 720
     
@@ -52,12 +52,12 @@ class StyleArt{
             let pathMosaic = Bundle.main.path(forResource: "FNS-Mosaic", ofType: "mlmodelc")
             let pathScream = Bundle.main.path(forResource: "FNS-The-Scream", ofType: "mlmodelc")
             
-            museModel = try FNS_La_Muse_1(contentsOf:URL(fileURLWithPath: pathMuse!) )
-            candy = try FNS_Candy_1(contentsOf:URL(fileURLWithPath: pathCandy!) )
-            Feathers = try FNS_Feathers_1(contentsOf:URL(fileURLWithPath: pathFeathers!) )
-            udanieModel = try FNS_Udnie_1(contentsOf:URL(fileURLWithPath: pathUdanie!) )
-            mosaic = try FNS_Mosaic_1(contentsOf:URL(fileURLWithPath: pathMosaic!) )
-            screamModel = try FNS_The_Scream_1(contentsOf:URL(fileURLWithPath: pathScream!) )
+            museModel = try FNS_La_Muse(contentsOf:URL(fileURLWithPath: pathMuse!) )
+            candy = try FNS_Candy(contentsOf:URL(fileURLWithPath: pathCandy!) )
+            Feathers = try FNS_Feathers(contentsOf:URL(fileURLWithPath: pathFeathers!) )
+            udanieModel = try FNS_Udnie(contentsOf:URL(fileURLWithPath: pathUdanie!) )
+            mosaic = try FNS_Mosaic(contentsOf:URL(fileURLWithPath: pathMosaic!) )
+            screamModel = try FNS_The_Scream(contentsOf:URL(fileURLWithPath: pathScream!) )
             
             models.append(mosaic.model)
             models.append(screamModel.model)
