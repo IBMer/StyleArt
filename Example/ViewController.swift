@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreML
+import Photos
 
 class ViewController: UIViewController, UINavigationControllerDelegate,UICollectionViewDelegate,UICollectionViewDataSource {
     
@@ -17,6 +18,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate,UICollect
     
     //MARK:- Properties
     var originalImage:UIImage?
+    var processedImage:UIImage?
   
     //MARK:- ViewController life cycles
     override func viewDidLoad() {
@@ -63,6 +65,61 @@ class ViewController: UIViewController, UINavigationControllerDelegate,UICollect
         picker.delegate = self
         picker.sourceType = .photoLibrary
         present(picker, animated: true)
+    }
+    
+    @IBAction func saveToPhotos(_ sender: Any) {
+        guard let imageToSave = processedImage ?? imageView.image else {
+            showAlert(title: "No Image", message: "No image to save. Please select and process an image first.")
+            return
+        }
+        
+        PHPhotoLibrary.requestAuthorization { status in
+            switch status {
+            case .authorized:
+                DispatchQueue.main.async {
+                    self.saveImageToPhotos(imageToSave)
+                }
+            case .denied, .restricted:
+                DispatchQueue.main.async {
+                    self.showAlert(title: "Permission Denied", message: "Please allow access to Photos in Settings to save images.")
+                }
+            case .notDetermined:
+                DispatchQueue.main.async {
+                    self.showAlert(title: "Permission Required", message: "Please grant permission to access Photos.")
+                }
+            case .limited:
+                DispatchQueue.main.async {
+                    self.saveImageToPhotos(imageToSave)
+                }
+            @unknown default:
+                DispatchQueue.main.async {
+                    self.showAlert(title: "Error", message: "Unknown permission status.")
+                }
+            }
+        }
+    }
+    
+    private func saveImageToPhotos(_ image: UIImage) {
+        PHPhotoLibrary.shared().performChanges({
+            PHAssetCreationRequest.creationRequestForAsset(from: image)
+        }) { success, error in
+            DispatchQueue.main.async {
+                if success {
+                    let size = image.size
+                    self.showAlert(title: "Saved Successfully", 
+                                 message: "Image saved to Photos!\nSize: \(Int(size.width)) × \(Int(size.height)) pixels")
+                } else {
+                    self.showAlert(title: "Save Failed", 
+                                 message: error?.localizedDescription ?? "Failed to save image")
+                }
+            }
+        }
+    }
+    
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
     //MARK:- CollectionView datasource and delegates
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -112,6 +169,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate,UICollect
             StyleArt.shared.process(image: self.originalImage!, style: ArtStyle(rawValue: indexPath.row)!, compeletion: { (result) in
                 
                 if let image = result{
+                    self.processedImage = image
                     self.imageView.image = image
                 }
             })

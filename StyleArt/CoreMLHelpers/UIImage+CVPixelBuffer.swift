@@ -118,6 +118,44 @@ extension UIImage {
 
 extension UIImage {
   /**
+   Resizes image to target size while maintaining aspect ratio.
+   The image is centered and any remaining space is filled with transparent pixels.
+   */
+  public func resized(to targetSize: CGSize) -> UIImage? {
+    let widthRatio = targetSize.width / size.width
+    let heightRatio = targetSize.height / size.height
+    let scaleFactor = min(widthRatio, heightRatio)
+    
+    let scaledSize = CGSize(width: size.width * scaleFactor, height: size.height * scaleFactor)
+    
+    UIGraphicsBeginImageContextWithOptions(targetSize, false, scale)
+    defer { UIGraphicsEndImageContext() }
+    
+    let origin = CGPoint(
+      x: (targetSize.width - scaledSize.width) / 2,
+      y: (targetSize.height - scaledSize.height) / 2
+    )
+    
+    draw(in: CGRect(origin: origin, size: scaledSize))
+    
+    return UIGraphicsGetImageFromCurrentImageContext()
+  }
+  
+  /**
+   Resizes image to exact target size, potentially changing aspect ratio.
+   */
+  public func resizedExact(to targetSize: CGSize) -> UIImage? {
+    UIGraphicsBeginImageContextWithOptions(targetSize, false, scale)
+    defer { UIGraphicsEndImageContext() }
+    
+    draw(in: CGRect(origin: .zero, size: targetSize))
+    
+    return UIGraphicsGetImageFromCurrentImageContext()
+  }
+}
+
+extension UIImage {
+  /**
     Creates a new UIImage from an array of RGBA bytes.
    */
   @nonobjc public class func fromByteArrayRGBA(_ bytes: [UInt8],

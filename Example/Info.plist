@@ -24,6 +24,8 @@
 	<string>For you to shoot a photo for object recognition</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>For you to select a photo for object recognition</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>For you to save processed stylized images to your photo library</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

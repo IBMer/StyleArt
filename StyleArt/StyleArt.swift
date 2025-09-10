@@ -79,19 +79,28 @@ class StyleArt{
     func process(image:UIImage,style:ArtStyle,compeletion:(_ result:UIImage?)->()){
 
         let model = models[style.rawValue]
+        let originalSize = image.size
         
         if let pixelBufferd = image.pixelBuffer(width: 720, height: 720) {
             let input = StyleArtInput(input:pixelBufferd)
             let outFeatures = try! model.prediction(from: input)
             let output = outFeatures.featureValue(for: "outputImage")!.imageBufferValue!
-            if let result = UIImage(pixelBuffer: output) {
-                print("Done");
-                compeletion(result)
+            if let processedImage = UIImage(pixelBuffer: output) {
+                if let finalResult = processedImage.resizedExact(to: originalSize) {
+                    print("Done");
+                    compeletion(finalResult)
+                } else {
+                    print("Failed to resize result");
+                    compeletion(nil)
+                }
             }else{
-                print("Failed");
+                print("Failed to create image from pixel buffer");
                 compeletion(nil)
             }
  
+        } else {
+            print("Failed to convert input image to pixel buffer");
+            compeletion(nil)
         }
     }
     //MARK:- Private Helper Functions

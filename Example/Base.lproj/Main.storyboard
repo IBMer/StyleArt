@@ -85,12 +85,20 @@
                                 <action selector="camera:" destination="BYZ-38-t0r" id="YEa-5i-cGl"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Library" id="0KJ-LA-I7n">
-                            <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                            <connections>
-                                <action selector="openLibrary:" destination="BYZ-38-t0r" id="Blg-v8-3Iu"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="save" id="sav-bt-123">
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <action selector="saveToPhotos:" destination="BYZ-38-t0r" id="save-action-123"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Library" id="0KJ-LA-I7n">
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <action selector="openLibrary:" destination="BYZ-38-t0r" id="Blg-v8-3Iu"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="CollectionView" destination="pvt-VI-BEC" id="RXP-PR-Jmq"/>
